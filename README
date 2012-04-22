@@ -1,0 +1,14 @@
+ADSL24 Bandwidth Meter
+
+Copyright (C) 2012 Kenny Millington
+Licensed under the GNU General Public License v3
+
+Displays your current bandwidth usage vs your scheduled bandwidth usage (determined by average your allowance over the number of weekdays in the current month).
+
+This is not the prettiest code I've written, but it's functional. It was going 
+to be kept private but I decided it could be useful for other people who may 
+not want to trust my server is not logging their usernames and passwords so
+I've released it into the wild!
+
+Please use responsibly in a way that does not impede the normal functionality
+of the ADSL24 site.

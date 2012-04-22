@@ -1,3 +1,20 @@
+/* Copyright (C) 2012 Kenny Millington
+ *
+ * This file is part of adsl24meter.
+ * 
+ * adsl24meter is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *  
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 BODY {
     background: #EEEEFF;
     font-family: Verdana, Arial, sans-serif;
@@ -69,7 +86,7 @@ FORM P {
     display: none;
     background: white;
     width: 750px;
-    margin: 25px auto 25px auto;
+    margin: 25px auto 0px auto;
     padding: 10px;
     text-align: center;
     font-size: 10pt;
@@ -85,6 +102,11 @@ FORM P {
 
 #bw_report.bad { border-color: #BC0000; }
 #bw_report.bad H2 { color: #BC0000; }
+
+.lastgen {
+    font-style: italic;
+    font-size: 8pt;
+}
 
 TABLE#bw_breakdown {
     margin: 10px auto 10px auto;
@@ -134,4 +156,20 @@ DIV.warning H2 {
     font-size: 12pt;
     color: #D05800;
     text-align: left;
+}
+
+#footer {
+    margin: 5px auto 0px auto;
+    width: 750px;
+    font-style: italic;
+    font-size: 8pt;
+
+    /* Yes, this is a hack around the paragraph tags not floating side-by-side
+     * on chrome at least. Adding a border to the footer div fixes it. */
+    border: 1px solid #EEEEFF;
+}
+
+#footer .source {
+    float: right;
+    text-align: right;
 }

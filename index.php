@@ -1,4 +1,21 @@
 <?php
+/* Copyright (C) 2012 Kenny Millington
+ *
+ * This file is part of adsl24meter.
+ * 
+ * adsl24meter is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *  
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 ob_start('ob_gzhandler');
 
 require_once("securesession.class.php");
@@ -66,7 +83,16 @@ function generate_report_html($data)
     
     $html .= "</tbody></table>\n";
     
-    $html .= "<p><a href=\"?action=logout\">[Logout]</p>\n";
+    $html .= "<p><a href=\"?action=logout\">[Logout]</a></p>\n";
+    
+    $html .= "<p class=\"lastgen\">Last generated: ";
+    
+    $secs = time() - $_SESSION['last_req_ts'];
+    $mins = floor($secs / 60);
+    $secs %= 60;
+
+    $html .= "$mins minutes, $secs seconds ago ";
+    $html .= "(updates after 10 minutes).</p>";
 
     return $html;
 }
@@ -90,26 +116,38 @@ function ajax_usage()
         ajax_not_logged_in();
 
     try {
-        
         if(isset($_SESSION['last_req_ts']) && isset($_SESSION['last_req'])) {
             if(time() - $_SESSION['last_req_ts'] <= 600) {
                 $stats = unserialize($_SESSION['last_req']);
             }
         }
+        
+        list($wd_so_far, $wd_total) = weekdays_in_month();
 
         if(!isset($stats)) {
-            $a = new ADSL24Client($_SESSION['adsl24cookie']);
-            $stats = $a->usage();
+            if(isset($_SESSION['demo'])) {
+                $scheduled = $wd_so_far * 30 / $wd_total;
+                if($_SESSION['demo'] == 'over') {
+                    $stats = array('used'=>mt_rand($scheduled, 30));
+                } else {
+                    $stats = array('used'=>mt_rand(1, $scheduled - 1));
+                }
+
+                $stats['remaining'] = 30 - $stats['used'];
+            } else {
+                $a = new ADSL24Client($_SESSION['adsl24cookie']);
+                $stats = $a->usage();
+            }
+
             $_SESSION['last_req_ts'] = time();
             $_SESSION['last_req'] = serialize($stats);
         }
 
         $total = array_sum($stats);
-        list($wd_so_far, $wd_total) = weekdays_in_month();
         $bw_per_day = $total / $wd_total;
         $scheduled = $wd_so_far * $bw_per_day;
         $credit = $scheduled - $stats['used'];
-
+        
         $data = array(
             'bw_total'=>$total,
             'bw_per_day'=>$bw_per_day,
@@ -142,7 +180,7 @@ if(isset($_REQUEST['action'])) switch($_REQUEST['action']) {
         ajax_usage();
     break;
     case 'logout':
-        unset($_SESSION['adsl24cookie']);
+        $_SESSION = array();
         header("Location: {$_SERVER['PHP_SELF']}");
         exit;
     break;
@@ -154,17 +192,27 @@ if(isset($_REQUEST['action'])) switch($_REQUEST['action']) {
 
 /* Handle login. */
 if(isset($_POST['user']) && isset($_POST['pass'])) {
-    $a = new ADSL24Client();
+    if($_POST['user'] == 'demo') {
+        if($_POST['pass'] == 'under' || $_POST['pass'] == 'over') {
+            $_SESSION['demo'] = $_POST['pass'];
+            $_SESSION['adsl24cookie'] = 'FAKECOOKIE';
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit;
+        }
+    } else {
+        unset($_SESSION['demo']);
+        $a = new ADSL24Client();
 
-    try {
-        $a->login($_POST['user'], $_POST['pass']);
-        $_SESSION['adsl24cookie'] = $a->getCookies();
-        header("Location: " . $_SERVER['REQUEST_URI']);
-        exit;
-    } catch(ADSL24ClientLoginException $e) {
-        $error = $e->getMessage(); 
-    } catch(ADSL24ClientException $e) {
-        $error = $e->getMessage();
+        try {
+            $a->login($_POST['user'], $_POST['pass']);
+            $_SESSION['adsl24cookie'] = $a->getCookies();
+            header("Location: " . $_SERVER['REQUEST_URI']);
+            exit;
+        } catch(ADSL24ClientLoginException $e) {
+            $error = $e->getMessage(); 
+        } catch(ADSL24ClientException $e) {
+            $error = $e->getMessage();
+        }
     }
 }
 ?>
@@ -193,6 +241,8 @@ ADSL24Client.init('<?php echo $_SERVER['PHP_SELF'];?>');
 <p>Please be aware that this is an <strong>unofficial</strong> site and is in no way affiliated with ADSL24.</p>
 <p>This site requires that you enter and consent to your ADSL24 username and password being sent to our server which allows us to retrieve your account usage information.</p>
 <p>Your username and password are handled with the greatest possible care and are <strong>not stored on our server</strong>. The connection from our server to ADSL24 is made securely over SSL and the certificates are verified.</p>
+
+<p>If you wish to try this site without providing your ADSL24 username/password combination then you may use the demo account with the username of 'demo' and a password of either 'over' or 'under' depending whether you want to see a meter that's over the scheduled usage or under it.</p>
 </div>
 <form action="" method="post">
 <?php if(isset($_POST['user'])): ?>
@@ -205,5 +255,15 @@ ADSL24Client.init('<?php echo $_SERVER['PHP_SELF'];?>');
 </p>
 </form>
 <?php endif; ?>
+<div id="footer">
+    <p class="source">
+        <strong>Don't trust this site?</strong>
+        <a href="https://github.com/kmdm/adsl24meter">Get the source!</a>
+    </p>
+    <p class="copyright">
+        Copyright &copy; 2012 
+        <a href="http://www.kennynet.co.uk/">Kenny Millington</a>
+    </p>
+</div>
 </body>
 </html>
