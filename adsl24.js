@@ -28,7 +28,8 @@ var ADSL24Client = {
                 chartArea: { left: 0, width: '100%' },
                 hAxis: {
                     gridlines: { color: '#FFF', count: resp['wd_total'] },
-                    viewWindow: { min: 0, max: resp['bw_total'] }
+                    viewWindow: { min: 0, max: resp['bw_total'] },
+                    textStyle : { color: '#FFF' }
                 },
                 backgroundColor: '#222'
             };
@@ -68,8 +69,6 @@ var ADSL24Client = {
                 .show();
 
             chart.draw(data, options);
-
-            setTimeout(ADSL24Client.fetchAndRender, 1000 * 600);
         });
     },
 
@@ -85,5 +84,24 @@ var ADSL24Client = {
         $(window).bind('beforeunload', function() {
             $(document).unbind('ajaxError');
         });
+
+        setInterval(function() {
+            $('#duration').each(function() {
+                var secs = parseInt($(this).attr('rel')) + 1;
+                $(this).attr('rel', secs);
+                var mins = Math.floor(secs / 60);
+                secs %= 60;
+
+                var mins_t = (mins == 1) ? " minute" : " minutes";
+                var secs_t = (secs == 1) ? " second" : " seconds";
+
+                $(this).html(mins + mins_t + ", " + secs + secs_t);
+
+                if(mins >= 10) {
+                    $(this).attr('id', 'duration_disabled');
+                    ADSL24Client.fetchAndRender();
+                }
+            });
+        }, 1000);
     }
 };

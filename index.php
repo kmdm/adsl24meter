@@ -98,8 +98,9 @@ function generate_report_html($data)
     $mins = floor($secs / 60);
     $secs %= 60;
 
-    $html .= "$mins minutes, $secs seconds ago ";
-    $html .= "(updates after 10 minutes).</p>";
+    $html .= "<span id=\"duration\" rel=\"".(time() - $_SESSION['last_req_ts']);
+    $html .= "\">$mins minutes, $secs seconds";
+    $html .= "</span> ago (updates after 10 minutes).</p>";
 
     return $html;
 }
