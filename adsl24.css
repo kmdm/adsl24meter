@@ -1,0 +1,137 @@
+BODY {
+    background: #EEEEFF;
+    font-family: Verdana, Arial, sans-serif;
+    min-width: 900px;
+}
+
+H1 { 
+    background: url('unofficial.png') white -20px 0px;
+
+    margin: 15px auto 25px auto;
+    padding: 10px;
+    width: 500px;
+
+    text-align: center;
+    color: #183362;
+
+    font-weight: bolder;
+    font-variant: small-caps;
+    font-size: 36pt;
+
+    border: 2px solid #183362;
+    border-radius: 10px;
+    -moz-border-radius:  10px;
+    -webkit-border-radius: 10px;
+}
+
+H2 {
+    margin: 2px;
+    padding: 0px;
+    color: #183362;
+    font-size: 14pt;
+    text-align: center;
+}
+
+FORM { 
+    background: white;
+    margin: auto;
+    width: 750px;
+
+    border: 2px solid #183362;
+    border-radius: 10px;
+    -moz-border-radius:  10px;
+    -webkit-border-radius: 10px;
+}
+
+FORM P { 
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 10pt;
+    color: #183362;
+}
+
+#bw_chart {
+    -webkit-border-radius: 5px;
+    padding-right: 1px;
+    border: 5px solid #183362;
+    margin: auto;
+    background-color: black;
+}
+
+#bw_chart.loading {
+    background-image: url('loading.gif');
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#bw_report {
+    display: none;
+    background: white;
+    width: 750px;
+    margin: 25px auto 25px auto;
+    padding: 10px;
+    text-align: center;
+    font-size: 10pt;
+
+    border: 2px solid #183362;
+    border-radius: 10px;
+    -moz-border-radius:  10px;
+    -webkit-border-radius: 10px;
+}
+
+#bw_report.good { border-color: #00BC00; }
+#bw_report.good H2 { color: #00BC00; }
+
+#bw_report.bad { border-color: #BC0000; }
+#bw_report.bad H2 { color: #BC0000; }
+
+TABLE#bw_breakdown {
+    margin: 10px auto 10px auto;
+    border-collapse: collapse;
+    border: 1px solid #183362;
+}
+
+
+TABLE#bw_breakdown TH {
+    border: 1px solid #183362;
+    color: #183362;
+    text-align: right;
+    padding: 5px;
+}
+
+TABLE#bw_breakdown TD { 
+    border: 1px solid #183362;
+    padding: 5px; 
+    text-align: right; 
+}
+
+TABLE#bw_breakdown THEAD TH {
+    background: #183362;
+    color: white;
+    text-align: center;
+}
+
+DIV.warning {
+    background: url('warning.png') 10px center no-repeat white;
+    padding: 10px 10px 10px 160px;
+
+    border: 2px solid #F28500;
+    border-radius: 10px;
+    -moz-border-radius:  10px;
+    -webkit-border-radius: 10px;
+
+    color: #D05800;
+    font-size: 10pt;
+    width: 750px;
+
+    margin: 15px auto 25px auto;
+
+}
+
+DIV.warning H2 {
+    font-weight: bold;
+    font-size: 12pt;
+    color: #D05800;
+    text-align: left;
+}
