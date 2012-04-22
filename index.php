@@ -81,6 +81,13 @@ function generate_report_html($data)
         $html .= "<td>".number_format(-$bw_credit, 3)."GB</td></tr>\n";
     }
     
+    $wd_left = $wd_total - $wd_so_far;
+    $bw_left = ($bw_total - $bw_used)  / $wd_left;
+
+    $html .= "<tr><th>Weekdays remaining</th><td>$wd_left days</td></tr>\n";
+    $html .= "<tr><th>Revised scheduled bandwidth per weekday</th>";
+    $html .= "<td>".number_format($bw_left, 3)."GB</td></tr>\n";
+
     $html .= "</tbody></table>\n";
     
     $html .= "<p><a href=\"?action=logout\">[Logout]</a></p>\n";
