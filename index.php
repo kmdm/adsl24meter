@@ -65,6 +65,8 @@ function generate_report_html($data)
     }
     
     $html .= "</tbody></table>\n";
+    
+    $html .= "<p><a href=\"?action=logout\">[Logout]</p>\n";
 
     return $html;
 }
@@ -197,7 +199,7 @@ ADSL24Client.init('<?php echo $_SERVER['PHP_SELF'];?>');
 <p class="badlogin">Invalid username/password combination. Please try again.</p>
 <?php endif; ?>
 <p>
-    Username: <input type="text" name="user" />
+    ADSL24 Username: <input type="text" name="user" />
     Password: <input type="password" name="pass" />
     <input type="submit" value="Login" />
 </p>
