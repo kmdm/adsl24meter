@@ -25,7 +25,7 @@ function weekdays_in_month()
 {
     $so_far = 0; $total = 0;
     $d = cal_days_in_month(CAL_GREGORIAN,intval(date('m')),intval(date('Y')));
-    for($i=0; $i <= $d; $i++) {
+    for($i=1; $i <= $d; $i++) {
         if(intval(date('N', strtotime(date(sprintf('Y-m-%02d', $i))))) < 6) {
             $total++;
 
